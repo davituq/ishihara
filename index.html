@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ishihara Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        #testContainer {
+            margin: 20px auto;
+            max-width: 400px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #ishiharaImage {
+            width: 100%;
+            max-width: 300px;
+            margin-bottom: 20px;
+        }
+
+        #userInput {
+            padding: 10px;
+            font-size: 1.2rem;
+            width: 100%;
+            max-width: 100px;
+            text-align: center;
+        }
+
+        #submitButton {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        #submitButton:hover {
+            background-color: #45a049;
+        }
+
+        #feedback {
+            margin-top: 20px;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>Ishihara Color Vision Test</h1>
+
+    <div id="testContainer">
+        <img id="ishiharaImage" src="ishihara_1.png" alt="Ishihara Plate">
+        <p>Type the number you see in the image:</p>
+        <input type="text" id="userInput" placeholder="Enter number">
+        <br>
+        <button id="submitButton">Submit</button>
+        <div id="feedback"></div>
+    </div>
+
+    <script>
+        // Images and correct answers
+        const ishiharaPlates = [
+            { image: "ishihara_1.png", correctAnswer: "12" },
+            { image: "ishihara_2.png", correctAnswer: "8" },
+            { image: "ishihara_3.png", correctAnswer: "6" },
+            { image: "ishihara_4.png", correctAnswer: "29" },
+            { image: "ishihara_5.png", correctAnswer: "5" },
+            { image: "ishihara_6.png", correctAnswer: "74" },
+            { image: "ishihara_7.png", correctAnswer: "45" },
+            { image: "ishihara_8.png", correctAnswer: "7" },
+            { image: "ishihara_9.png", correctAnswer: "16" },
+            { image: "ishihara_10.png", correctAnswer: "73" },
+            { image: "ishihara_11.png", correctAnswer: "26" },
+            { image: "ishihara_12.png", correctAnswer: "42" }
+        ];
+
+        let currentPlateIndex = 0;
+        const totalPlates = ishiharaPlates.length;
+        let correctAnswers = 0;
+
+        const ishiharaImage = document.getElementById('ishiharaImage');
+        const userInput = document.getElementById('userInput');
+        const feedback = document.getElementById('feedback');
+        const submitButton = document.getElementById('submitButton');
+
+        // Function to load the current plate
+        function loadPlate() {
+            ishiharaImage.src = ishiharaPlates[currentPlateIndex].image;
+            userInput.value = '';
+            feedback.textContent = '';
+        }
+
+        // Function to check the user's answer
+        function checkAnswer() {
+            const userAnswer = userInput.value;
+            const correctAnswer = ishiharaPlates[currentPlateIndex].correctAnswer;
+
+            if (userAnswer === correctAnswer) {
+                correctAnswers++;
+                feedback.textContent = 'Correct!';
+                feedback.style.color = 'green';
+            } else {
+                feedback.textContent = 'Incorrect. The correct number was ' + correctAnswer;
+                feedback.style.color = 'red';
+            }
+
+            // Move to the next plate or finish
+            currentPlateIndex++;
+            if (currentPlateIndex < totalPlates) {
+                setTimeout(loadPlate, 2000);
+            } else {
+                setTimeout(showFinalResult, 2000);
+            }
+        }
+
+        // Function to display final results
+        function showFinalResult() {
+            const score = (correctAnswers / totalPlates) * 100;
+            feedback.innerHTML = `<strong>Test complete!</strong> You scored ${correctAnswers} out of ${totalPlates} plates (${score}%).`;
+            submitButton.disabled = true;
+        }
+
+        // Event listener for the submit button
+        submitButton.addEventListener('click', checkAnswer);
+
+        // Load the first plate on page load
+        loadPlate();
+    </script>
+</body>
+</html>
